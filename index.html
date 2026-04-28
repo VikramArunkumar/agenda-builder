@@ -1,0 +1,359 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Source Sans 3',sans-serif;color:var(--color-text-primary)}
+  .app{display:flex;gap:0;min-height:600px}
+  .sidebar{width:280px;min-width:280px;border-right:0.5px solid var(--color-border-tertiary);padding:16px;background:var(--color-background-secondary);overflow-y:auto;max-height:800px}
+  .preview{flex:1;padding:16px;overflow-y:auto;max-height:800px}
+  .s-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-secondary);margin:16px 0 8px;padding-top:12px;border-top:0.5px solid var(--color-border-tertiary)}
+  .s-title:first-child{margin-top:0;padding-top:0;border-top:none}
+  .field{margin-bottom:8px}
+  .field label{display:block;font-size:12px;color:var(--color-text-secondary);margin-bottom:3px}
+  .field input,.field textarea{width:100%;font-size:13px;padding:5px 8px;border:0.5px solid var(--color-border-secondary);border-radius:6px;background:var(--color-background-primary);color:var(--color-text-primary);font-family:inherit}
+  .field textarea{resize:vertical;min-height:52px;line-height:1.4}
+  .field input:focus,.field textarea:focus{outline:none;border-color:#1a3a6b;box-shadow:0 0 0 2px rgba(26,58,107,.12)}
+  .print-btn{width:100%;padding:9px;background:#1a3a6b;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:12px;letter-spacing:.02em}
+  .print-btn:hover{background:#142d54}
+
+  /* AGENDA PREVIEW */
+  .agenda{background:#fff;color:#111;font-family:'Source Sans 3',sans-serif;padding:28px 32px;font-size:12.5px;line-height:1.45;border:0.5px solid var(--color-border-tertiary);border-radius:8px;min-height:500px}
+  .agenda-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:6px}
+  .tm-logo{width:54px;height:54px;flex-shrink:0;border-radius:50%;border:2.5px solid #1a3a6b;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff}
+  .tm-logo-inner{text-align:center}
+  .tm-logo-arc{font-size:6px;font-weight:700;color:#1a3a6b;letter-spacing:.05em;text-transform:uppercase;line-height:1.1}
+  .tm-logo-globe{font-size:18px;line-height:1}
+  .header-center{flex:1;text-align:center}
+  .club-name-display{font-family:'Crimson Pro',serif;font-size:22px;font-weight:700;color:#1a3a6b;text-transform:uppercase;letter-spacing:.03em;line-height:1.1}
+  .club-number-display{font-size:11.5px;color:#444;margin-top:2px}
+  .meeting-date-bar{background:#d0d8e8;text-align:center;font-size:12px;color:#1a3a6b;padding:3px 0;margin-top:4px;font-weight:600}
+  .agenda-body{display:flex;gap:14px;margin-top:10px}
+  .agenda-left{flex:1.4;min-width:0}
+  .agenda-right{width:210px;flex-shrink:0}
+  .wod-box{border:1px solid #bbb;background:#f5f5f5;padding:10px 12px}
+  .wod-title-bar{font-size:11px;text-align:center;color:#555;margin-bottom:4px}
+  .wod-word{font-family:'Crimson Pro',serif;font-size:15px;font-weight:700;text-align:center;color:#1a3a6b;margin-bottom:4px}
+  .wod-def{font-size:11px;color:#333;line-height:1.4;margin-bottom:6px}
+  .wod-example-label{font-size:11px;font-weight:600;color:#333}
+  .wod-example{font-size:11px;color:#333;line-height:1.4;font-style:italic}
+  .section{margin-bottom:6px}
+  .section-row{display:flex;align-items:flex-start;gap:6px;padding:3px 0;border-bottom:0.5px solid #e0e0e0}
+  .time-badge{background:#1a3a6b;color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px}
+  .section-label{font-weight:700;font-size:12px;color:#1a3a6b;text-decoration:underline}
+  .section-sub{font-size:11px;color:#555;margin-top:1px;font-style:italic}
+  .role-line{display:flex;align-items:baseline;justify-content:space-between;margin-top:1px}
+  .role-name{font-size:11.5px;color:#333;flex:1}
+  .role-fill{color:#555;font-size:11px;letter-spacing:.05em;margin:0 4px}
+  .assignee{font-size:11.5px;color:#1a3a6b;font-weight:600;min-width:60px;text-align:right}
+  .speeches-section{background:#e8f0e0;border:1px solid #c5d4b0;padding:8px 10px;margin-bottom:6px}
+  .speech-header{font-weight:700;font-size:12px;color:#2a5a1a;text-decoration:underline;margin-bottom:4px}
+  .speech-slot{margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid #c5d4b0}
+  .speech-slot:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .speech-row{display:flex;gap:8px;font-size:11px;margin-bottom:1px}
+  .speech-num{font-weight:700;color:#2a5a1a;min-width:12px}
+  .speech-speaker-line{flex:1;border-bottom:1px solid #888;min-height:14px;font-size:11.5px;color:#1a3a6b;font-weight:600}
+  .speech-title-row{display:flex;gap:8px;font-size:11px;margin-bottom:2px}
+  .speech-meta{display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:10.5px;color:#444;margin-top:2px}
+  .speech-evaluator{font-size:11px;color:#333;text-align:right}
+  .tt-section{background:#dceaf8;border:1px solid #a8c4e0;padding:8px 10px;margin-bottom:6px}
+  .tt-header{font-weight:700;font-size:12px;color:#0a3a6b;text-decoration:underline}
+  .eval-section{background:#f5f0d8;border:1px solid #d4c88a;padding:8px 10px;margin-bottom:6px}
+  .eval-header{font-weight:700;font-size:12px;color:#5a4500;text-decoration:underline}
+  .mission-box{border:1px solid #888;padding:8px 12px;text-align:center;font-size:10.5px;color:#333;line-height:1.5;margin-top:8px;font-style:italic}
+
+  @media print{
+    .sidebar,.print-btn{display:none!important}
+    .preview{padding:0;max-height:none}
+    .agenda{border:none;box-shadow:none;padding:20px}
+    body{background:#fff}
+  }
+</style>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="s-title">Club Info</div>
+    <div class="field"><label>Club Name</label><input id="clubName" value="Toastmasters Club Name" oninput="render()"></div>
+    <div class="field"><label>Club Number</label><input id="clubNum" value="" placeholder="e.g. 123456" oninput="render()"></div>
+    <div class="field"><label>Meeting Date</label><input id="meetDate" type="date" oninput="render()"></div>
+
+    <div class="s-title">Word of the Day</div>
+    <div class="field"><label>Word</label><input id="wod" value="Cultivate" oninput="render()"></div>
+    <div class="field"><label>Pronunciation</label><input id="wodPron" value="kuhl·tuh·vayt" placeholder="e.g. kuhl·tuh·vayt" oninput="render()"></div>
+    <div class="field"><label>Part of speech + definition</label><textarea id="wodDef" oninput="render()">(verb) try to win the friendship or favor of (someone); apply oneself to improving or developing one's mind or manners. Synonyms: domesticate, tame, accommodate, adapt</textarea></div>
+    <div class="field"><label>Example sentences</label><textarea id="wodEx" oninput="render()">It helps if you go out of your way to cultivate the local people. She worked hard to cultivate a calm demeanor, even during stressful situations, by practicing meditation and mindfulness.</textarea></div>
+
+    <div class="s-title">Opening Roles</div>
+    <div class="field"><label>Sergeant-at-Arms</label><input id="saa" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Presiding Officer</label><input id="po" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Toastmaster of the Day</label><input id="tmDay" placeholder="Name" oninput="render()"></div>
+
+    <div class="s-title">Functionaries</div>
+    <div class="field"><label>Timer</label><input id="timer" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Ah-Counter</label><input id="ahc" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Grammarian</label><input id="gram" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Ballot Counter</label><input id="ballot" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Videographer</label><input id="video" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Humorist</label><input id="humor" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Word Master</label><input id="wordmaster" placeholder="Name" oninput="render()"></div>
+
+    <div class="s-title">Speaker 1</div>
+    <div class="field"><label>Speaker Name</label><input id="sp1" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Speech Title</label><input id="sp1title" placeholder="Title" oninput="render()"></div>
+    <div class="field"><label>Pathway</label><input id="sp1path" placeholder="Pathway" oninput="render()"></div>
+    <div class="field"><label>Level</label><input id="sp1lvl" placeholder="Level" oninput="render()"></div>
+    <div class="field"><label>Project</label><input id="sp1proj" placeholder="Project" oninput="render()"></div>
+    <div class="field"><label>Evaluator</label><input id="ev1" placeholder="Name" oninput="render()"></div>
+
+    <div class="s-title">Speaker 2</div>
+    <div class="field"><label>Speaker Name</label><input id="sp2" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Speech Title</label><input id="sp2title" placeholder="Title" oninput="render()"></div>
+    <div class="field"><label>Pathway</label><input id="sp2path" placeholder="Pathway" oninput="render()"></div>
+    <div class="field"><label>Level</label><input id="sp2lvl" placeholder="Level" oninput="render()"></div>
+    <div class="field"><label>Project</label><input id="sp2proj" placeholder="Project" oninput="render()"></div>
+    <div class="field"><label>Evaluator</label><input id="ev2" placeholder="Name" oninput="render()"></div>
+
+    <div class="s-title">Speaker 3</div>
+    <div class="field"><label>Speaker Name</label><input id="sp3" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Speech Title</label><input id="sp3title" placeholder="Title" oninput="render()"></div>
+    <div class="field"><label>Pathway</label><input id="sp3path" placeholder="Pathway" oninput="render()"></div>
+    <div class="field"><label>Level</label><input id="sp3lvl" placeholder="Level" oninput="render()"></div>
+    <div class="field"><label>Project</label><input id="sp3proj" placeholder="Project" oninput="render()"></div>
+    <div class="field"><label>Evaluator</label><input id="ev3" placeholder="Name" oninput="render()"></div>
+
+    <div class="s-title">Table Topics</div>
+    <div class="field"><label>Table Topics Master</label><input id="ttm" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Theme</label><input id="tttheme" placeholder="Theme" oninput="render()"></div>
+
+    <div class="s-title">Evaluations</div>
+    <div class="field"><label>General Evaluator</label><input id="ge" placeholder="Name" oninput="render()"></div>
+
+    <div class="s-title">Closing</div>
+    <div class="field"><label>Conclusion Toastmaster</label><input id="concTM" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Wrap Up Officer</label><input id="wrapPO" placeholder="Name" oninput="render()"></div>
+
+    <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+
+  <div class="preview">
+    <div class="agenda" id="agenda"></div>
+  </div>
+</div>
+
+<script>
+function g(id){return document.getElementById(id)?.value||''}
+function dots(n){return '·'.repeat(n||10)}
+function nameOrDots(val,n){return val?`<span class="assignee">${val}</span>`:`<span class="role-fill">${dots(n||10)}</span>`}
+
+function formatDate(val){
+  if(!val)return'';
+  const d=new Date(val+'T12:00:00');
+  return d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+}
+
+function render(){
+  const clubName=g('clubName')||'TOASTMASTERS CLUB NAME';
+  const clubNum=g('clubNum');
+  const meetDate=g('meetDate');
+  const wod=g('wod')||'Word of the Day';
+  const wodPron=g('wodPron');
+  const wodDef=g('wodDef');
+  const wodEx=g('wodEx');
+
+  const saa=g('saa'),po=g('po'),tmDay=g('tmDay');
+  const timer=g('timer'),ahc=g('ahc'),gram=g('gram'),ballot=g('ballot'),video=g('video'),humor=g('humor'),wordmaster=g('wordmaster');
+  const sp1=g('sp1'),sp1t=g('sp1title'),sp1p=g('sp1path'),sp1l=g('sp1lvl'),sp1pr=g('sp1proj'),ev1=g('ev1');
+  const sp2=g('sp2'),sp2t=g('sp2title'),sp2p=g('sp2path'),sp2l=g('sp2lvl'),sp2pr=g('sp2proj'),ev2=g('ev2');
+  const sp3=g('sp3'),sp3t=g('sp3title'),sp3p=g('sp3path'),sp3l=g('sp3lvl'),sp3pr=g('sp3proj'),ev3=g('ev3');
+  const ttm=g('ttm'),tttheme=g('tttheme'),ge=g('ge'),concTM=g('concTM'),wrapPO=g('wrapPO');
+
+  function wodWordDisplay(){
+    if(!wod)return'Word of the Day';
+    if(wodPron)return`${wod} <span style="font-size:12px;font-weight:400;color:#444">(${wodPron})</span>`;
+    return wod;
+  }
+
+  function speechSlot(num,sp,title,path,lvl,proj,ev){
+    const spDisplay=sp?`<span style="color:#1a3a6b;font-weight:700;font-size:12px">${sp}</span>`:
+      `<span style="border-bottom:1px solid #888;display:inline-block;width:120px;min-height:13px"></span>`;
+    const titleDisplay=title?`<span style="color:#333;font-weight:600">${title}</span>`:
+      `<span style="border-bottom:1px solid #888;display:inline-block;flex:1;min-height:13px"></span>`;
+    return`<div class="speech-slot">
+      <div class="speech-row">
+        <span class="speech-num">${num}</span>
+        <div style="flex:1">${spDisplay}</div>
+        <div class="speech-evaluator">Evaluator&nbsp;&nbsp;${ev?`<span style="color:#1a3a6b;font-weight:700">${ev}</span>`:dots(6)}</div>
+      </div>
+      <div class="speech-row" style="margin-top:3px">
+        <span class="speech-num" style="visibility:hidden">${num}</span>
+        <span style="font-size:11px;color:#555;margin-right:4px">Title:</span>
+        ${titleDisplay}
+        <span style="font-size:11px;color:#888;margin-left:12px">Speech Time: 5 - 7 minutes</span>
+      </div>
+      <div class="speech-meta" style="margin-left:18px">
+        <div><span style="font-weight:600">Pathway:</span> ${path||''}</div>
+        <div><span style="font-weight:600">Pathway:</span> ${path||''}</div>
+        <div><span style="font-weight:600">Level:</span> ${lvl||''}</div>
+        <div><span style="font-weight:600">Level:</span> ${lvl||''}</div>
+        <div>Project: ${proj||''}</div>
+        <div><span style="font-weight:600">Project:</span> ${proj||''}</div>
+      </div>
+      <div style="font-size:10px;color:#0a6;text-decoration:underline;margin-left:18px;margin-top:2px">One minute for written feedback</div>
+    </div>`;
+  }
+
+  const html=`
+  <div class="agenda-header">
+    <div class="tm-logo">
+      <div class="tm-logo-inner">
+        <div class="tm-logo-arc">TOAST</div>
+        <div class="tm-logo-globe">🌐</div>
+        <div class="tm-logo-arc">MASTERS</div>
+        <div class="tm-logo-arc" style="font-size:5px">INTERNATIONAL</div>
+      </div>
+    </div>
+    <div class="header-center" style="flex:1">
+      <div class="club-name-display">${clubName}</div>
+      <div class="club-number-display">Club Number: ${clubNum}</div>
+      <div class="meeting-date-bar">Meeting Agenda for: ${formatDate(meetDate)||'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}</div>
+    </div>
+  </div>
+
+  <div class="agenda-body">
+    <div class="agenda-left">
+
+      <div class="section">
+        <div class="section-row">
+          <span class="time-badge">11:00</span>
+          <div style="flex:1">
+            <div class="role-line">
+              <span class="section-label">CALL TO ORDER</span>
+              <span style="font-size:11.5px;color:#333;flex:1;padding-left:8px">Sergeant-At-Arms ${saa?`<span class="assignee">${saa}</span>`:dots(11)}</span>
+            </div>
+            <div class="section-sub">Introduction of Presiding Officer</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-row">
+          <span class="time-badge">11:02</span>
+          <div style="flex:1">
+            <div class="role-line">
+              <span class="section-label">WELCOME</span>
+              <span style="font-size:11.5px;color:#333;flex:1;padding-left:8px">Presiding Officer ${po?`<span class="assignee">${po}</span>`:dots(11)}</span>
+            </div>
+            <div class="section-sub">Visitor Introductions · Wins of the week</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-row">
+          <span class="time-badge">11:07</span>
+          <div style="flex:1">
+            <div class="role-line">
+              <span class="section-label">TODAY'S PROGRAM</span>
+              <span style="font-size:11.5px;color:#333;flex:1;padding-left:8px">Toastmaster ${tmDay?`<span class="assignee">${tmDay}</span>`:dots(11)}</span>
+            </div>
+            <div class="section-sub" style="margin-top:3px">Introduction of Functionaries, Explanation of Roles:</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px 16px;margin-top:3px">
+              <div style="font-size:11px;color:#333">'Ah' Counter ${ahc?`<span style="color:#1a3a6b;font-weight:600">${ahc}</span>`:dots(5)}</div>
+              <div style="font-size:11px;color:#333">Timer ${timer?`<span style="color:#1a3a6b;font-weight:600">${timer}</span>`:dots(5)}</div>
+              <div style="font-size:11px;color:#333">Grammarian ${gram?`<span style="color:#1a3a6b;font-weight:600">${gram}</span>`:dots(5)}</div>
+              <div style="font-size:11px;color:#333">Ballot Counter ${ballot?`<span style="color:#1a3a6b;font-weight:600">${ballot}</span>`:dots(5)}</div>
+              <div style="font-size:11px;color:#333">Word Master ${wordmaster?`<span style="color:#1a3a6b;font-weight:600">${wordmaster}</span>`:dots(5)}</div>
+              <div style="font-size:11px;color:#333">Videographer ${video?`<span style="color:#1a3a6b;font-weight:600">${video}</span>`:dots(5)}</div>
+              <div></div>
+              <div style="font-size:11px;color:#333">Humorist ${humor?`<span style="color:#1a3a6b;font-weight:600">${humor}</span>`:dots(5)}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="speeches-section">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span class="time-badge">11:15</span>
+          <span class="speech-header">PREPARED SPEECHES</span>
+        </div>
+        ${speechSlot(1,sp1,sp1t,sp1p,sp1l,sp1pr,ev1)}
+        ${speechSlot(2,sp2,sp2t,sp2p,sp2l,sp2pr,ev2)}
+        ${speechSlot(3,sp3,sp3t,sp3p,sp3l,sp3pr,ev3)}
+      </div>
+
+      <div class="tt-section">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span class="time-badge">11:50</span>
+          <span class="tt-header">Table Topics</span>
+          <span style="flex:1;text-align:right;font-size:11.5px;color:#0a3a6b">Table Topics Master ${ttm?`<span style="font-weight:700">${ttm}</span>`:dots(4)}</span>
+        </div>
+        <div style="font-size:11px;color:#1a4a8b">Impromptu speeches: <strong>1 - 2 minutes</strong> per speech (guests are welcome to participate)</div>
+        <div style="font-size:11px;color:#1a4a8b">Call for Timer's Report, vote for Best Impromptu Speaker</div>
+        <div style="font-size:11.5px;color:#333;margin-top:6px">Theme: ${tttheme||'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}</div>
+      </div>
+
+      <div class="eval-section">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span class="time-badge">12:00</span>
+          <span class="eval-header">EVALUATIONS</span>
+          <span style="flex:1;text-align:right;font-size:11.5px;color:#5a4500">General Evaluator ${ge?`<span style="font-weight:700">${ge}</span>`:dots(4)}</span>
+        </div>
+        <div style="font-size:11px;color:#5a4500">Call for Evaluators: 2 - 3 minutes evaluation for each prepared speech</div>
+        <div style="font-size:11px;color:#5a4500">Call for Timer's Report, vote for Best Evaluator, Ballot Counter to collect ballots</div>
+        <div style="font-size:11px;color:#5a4500">Call for Functionaries' Reports. Overall Evaluation of the Meeting</div>
+      </div>
+
+      <div class="section">
+        <div class="section-row">
+          <span class="time-badge">12:22</span>
+          <div style="flex:1">
+            <div class="role-line">
+              <span class="section-label">CONCLUSION</span>
+              <span style="font-size:11.5px;color:#333;flex:1;padding-left:8px">Toastmaster ${concTM?`<span style="color:#1a3a6b;font-weight:700">${concTM}</span>`:dots(4)}</span>
+            </div>
+            <div class="section-sub">Declare Winners, Present Awards, &amp; return the control to Presiding officer</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-row">
+          <span class="time-badge">12:25</span>
+          <div style="flex:1">
+            <div class="role-line">
+              <span class="section-label">WRAP UP</span>
+              <span style="font-size:11.5px;color:#333;flex:1;padding-left:8px">Presiding Officer ${wrapPO?`<span style="color:#1a3a6b;font-weight:700">${wrapPO}</span>`:dots(4)}</span>
+            </div>
+            <div class="section-sub">Guests Comments, Future Meeting and Club Announcements</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-row" style="border-bottom:none;padding-top:4px">
+        <span class="time-badge">12:30</span>
+        <span style="font-weight:700;font-size:12.5px;color:#111;padding-left:6px">Adjourn Meeting</span>
+      </div>
+
+      <div class="mission-box">
+        The mission of a Toastmasters club is to provide a mutually supportive and positive learning environment in which every individual member has the opportunity to develop oral communication and leadership skills which in turn foster self-confidence and personal growth.
+      </div>
+    </div>
+
+    <div class="agenda-right">
+      <div class="wod-box">
+        <div class="wod-title-bar">Word of the Day</div>
+        <div class="wod-word">${wodWordDisplay()}</div>
+        <div class="wod-def">${wodDef||'Definition and part of speech will appear here.'}</div>
+        ${wodEx?`<div style="margin-top:6px;border-top:0.5px solid #ccc;padding-top:6px"><span class="wod-example-label">Example: </span><span class="wod-example">${wodEx}</span></div>`:''}
+      </div>
+    </div>
+  </div>
+  `;
+
+  document.getElementById('agenda').innerHTML=html;
+}
+
+// Set today's date as default
+const today=new Date().toISOString().split('T')[0];
+document.getElementById('meetDate').value=today;
+render();
+</script>
