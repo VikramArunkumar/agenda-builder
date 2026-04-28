@@ -76,6 +76,17 @@
     <div class="field"><label>Club Number</label><input id="clubNum" value="" placeholder="e.g. 123456" oninput="render()"></div>
     <div class="field"><label>Meeting Date</label><input id="meetDate" type="date" oninput="render()"></div>
 
+    <div class="s-title">Section Start Times</div>
+    <div class="field"><label>Call to Order</label><input id="t_order" value="11:00" oninput="render()"></div>
+    <div class="field"><label>Welcome</label><input id="t_welcome" value="11:02" oninput="render()"></div>
+    <div class="field"><label>Today's Program</label><input id="t_program" value="11:07" oninput="render()"></div>
+    <div class="field"><label>Prepared Speeches</label><input id="t_speeches" value="11:15" oninput="render()"></div>
+    <div class="field"><label>Table Topics</label><input id="t_tt" value="11:50" oninput="render()"></div>
+    <div class="field"><label>Evaluations</label><input id="t_eval" value="12:00" oninput="render()"></div>
+    <div class="field"><label>Conclusion</label><input id="t_conc" value="12:22" oninput="render()"></div>
+    <div class="field"><label>Wrap Up</label><input id="t_wrap" value="12:25" oninput="render()"></div>
+    <div class="field"><label>Adjourn</label><input id="t_adj" value="12:30" oninput="render()"></div>
+
     <div class="s-title">Word of the Day</div>
     <div class="field"><label>Word</label><input id="wod" value="Cultivate" oninput="render()"></div>
     <div class="field"><label>Pronunciation</label><input id="wodPron" value="kuhl·tuh·vayt" placeholder="e.g. kuhl·tuh·vayt" oninput="render()"></div>
@@ -103,6 +114,7 @@
     <div class="field"><label>Level</label><input id="sp1lvl" placeholder="Level" oninput="render()"></div>
     <div class="field"><label>Project</label><input id="sp1proj" placeholder="Project" oninput="render()"></div>
     <div class="field"><label>Evaluator</label><input id="ev1" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Time</label><input id="time1" placeholder="e.g. 5–7 min" oninput="render()"></div>
 
     <div class="s-title">Speaker 2</div>
     <div class="field"><label>Speaker Name</label><input id="sp2" placeholder="Name" oninput="render()"></div>
@@ -111,6 +123,7 @@
     <div class="field"><label>Level</label><input id="sp2lvl" placeholder="Level" oninput="render()"></div>
     <div class="field"><label>Project</label><input id="sp2proj" placeholder="Project" oninput="render()"></div>
     <div class="field"><label>Evaluator</label><input id="ev2" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Time</label><input id="time2" placeholder="e.g. 5–7 min" oninput="render()"></div>
 
     <div class="s-title">Speaker 3</div>
     <div class="field"><label>Speaker Name</label><input id="sp3" placeholder="Name" oninput="render()"></div>
@@ -119,6 +132,16 @@
     <div class="field"><label>Level</label><input id="sp3lvl" placeholder="Level" oninput="render()"></div>
     <div class="field"><label>Project</label><input id="sp3proj" placeholder="Project" oninput="render()"></div>
     <div class="field"><label>Evaluator</label><input id="ev3" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Time</label><input id="time3" placeholder="e.g. 5–7 min" oninput="render()"></div>
+
+    <div class="s-title">Speaker 4</div>
+    <div class="field"><label>Speaker Name</label><input id="sp4" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Speech Title</label><input id="sp4title" placeholder="Title" oninput="render()"></div>
+    <div class="field"><label>Pathway</label><input id="sp4path" placeholder="Pathway" oninput="render()"></div>
+    <div class="field"><label>Level</label><input id="sp4lvl" placeholder="Level" oninput="render()"></div>
+    <div class="field"><label>Project</label><input id="sp4proj" placeholder="Project" oninput="render()"></div>
+    <div class="field"><label>Evaluator</label><input id="ev4" placeholder="Name" oninput="render()"></div>
+    <div class="field"><label>Time</label><input id="time4" placeholder="e.g. 5–7 min" oninput="render()"></div>
 
     <div class="s-title">Table Topics</div>
     <div class="field"><label>Table Topics Master</label><input id="ttm" placeholder="Name" oninput="render()"></div>
@@ -143,7 +166,8 @@
 function g(id){return document.getElementById(id)?.value||''}
 function dots(n){return '·'.repeat(n||10)}
 function nameOrDots(val,n){return val?`<span class="assignee">${val}</span>`:`<span class="role-fill">${dots(n||10)}</span>`}
-
+function badge(id){return`<span class="time-badge">${g(id)||'--:--'}</span>`}
+  
 function formatDate(val){
   if(!val)return'';
   const d=new Date(val+'T12:00:00');
@@ -161,9 +185,10 @@ function render(){
 
   const saa=g('saa'),po=g('po'),tmDay=g('tmDay');
   const timer=g('timer'),ahc=g('ahc'),gram=g('gram'),ballot=g('ballot'),video=g('video'),humor=g('humor'),wordmaster=g('wordmaster');
-  const sp1=g('sp1'),sp1t=g('sp1title'),sp1p=g('sp1path'),sp1l=g('sp1lvl'),sp1pr=g('sp1proj'),ev1=g('ev1');
-  const sp2=g('sp2'),sp2t=g('sp2title'),sp2p=g('sp2path'),sp2l=g('sp2lvl'),sp2pr=g('sp2proj'),ev2=g('ev2');
-  const sp3=g('sp3'),sp3t=g('sp3title'),sp3p=g('sp3path'),sp3l=g('sp3lvl'),sp3pr=g('sp3proj'),ev3=g('ev3');
+  const sp1=g('sp1'),sp1t=g('sp1title'),sp1p=g('sp1path'),sp1l=g('sp1lvl'),sp1pr=g('sp1proj'),ev1=g('ev1'), time1=g('time1');
+  const sp2=g('sp2'),sp2t=g('sp2title'),sp2p=g('sp2path'),sp2l=g('sp2lvl'),sp2pr=g('sp2proj'),ev2=g('ev2'), time2=g('time2');
+  const sp3=g('sp3'),sp3t=g('sp3title'),sp3p=g('sp3path'),sp3l=g('sp3lvl'),sp3pr=g('sp3proj'),ev3=g('ev3'), time3=g('time3');
+  const sp4=g('sp4'),sp4t=g('sp4title'),sp4p=g('sp4path'),sp4l=g('sp4lvl'),sp4pr=g('sp4proj'),ev4=g('ev4'), time4=g('time4');
   const ttm=g('ttm'),tttheme=g('tttheme'),ge=g('ge'),concTM=g('concTM'),wrapPO=g('wrapPO');
 
   function wodWordDisplay(){
@@ -172,7 +197,7 @@ function render(){
     return wod;
   }
 
-  function speechSlot(num,sp,title,path,lvl,proj,ev){
+  function speechSlot(num,sp,title,path,lvl,proj,ev,time){
     const spDisplay=sp?`<span style="color:#1a3a6b;font-weight:700;font-size:12px">${sp}</span>`:
       `<span style="border-bottom:1px solid #888;display:inline-block;width:120px;min-height:13px"></span>`;
     const titleDisplay=title?`<span style="color:#333;font-weight:600">${title}</span>`:
@@ -187,7 +212,6 @@ function render(){
         <span class="speech-num" style="visibility:hidden">${num}</span>
         <span style="font-size:11px;color:#555;margin-right:4px">Title:</span>
         ${titleDisplay}
-        <span style="font-size:11px;color:#888;margin-left:12px">Speech Time: 5 - 7 minutes</span>
       </div>
       <div class="speech-meta" style="margin-left:18px">
         <div><span style="font-weight:600">Pathway:</span> ${path||''}</div>
@@ -196,6 +220,7 @@ function render(){
         <div><span style="font-weight:600">Level:</span> ${lvl||''}</div>
         <div>Project: ${proj||''}</div>
         <div><span style="font-weight:600">Project:</span> ${proj||''}</div>
+        <div><span style="font-weight:600">Speech Time:</span> ${time||''}</div>
       </div>
       <div style="font-size:10px;color:#0a6;text-decoration:underline;margin-left:18px;margin-top:2px">One minute for written feedback</div>
     </div>`;
@@ -223,7 +248,7 @@ function render(){
 
       <div class="section">
         <div class="section-row">
-          <span class="time-badge">11:00</span>
+          ${badge('t_order')}
           <div style="flex:1">
             <div class="role-line">
               <span class="section-label">CALL TO ORDER</span>
@@ -236,7 +261,7 @@ function render(){
 
       <div class="section">
         <div class="section-row">
-          <span class="time-badge">11:02</span>
+          ${badge('t_welcome')}
           <div style="flex:1">
             <div class="role-line">
               <span class="section-label">WELCOME</span>
@@ -249,7 +274,7 @@ function render(){
 
       <div class="section">
         <div class="section-row">
-          <span class="time-badge">11:07</span>
+          ${badge('t_program')}
           <div style="flex:1">
             <div class="role-line">
               <span class="section-label">TODAY'S PROGRAM</span>
@@ -272,17 +297,18 @@ function render(){
 
       <div class="speeches-section">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <span class="time-badge">11:15</span>
+          ${badge('t_speeches')}
           <span class="speech-header">PREPARED SPEECHES</span>
         </div>
         ${speechSlot(1,sp1,sp1t,sp1p,sp1l,sp1pr,ev1)}
         ${speechSlot(2,sp2,sp2t,sp2p,sp2l,sp2pr,ev2)}
         ${speechSlot(3,sp3,sp3t,sp3p,sp3l,sp3pr,ev3)}
+        ${speechSlot(4,sp4,sp4t,sp4p,sp4l,sp4pr,ev4)}
       </div>
 
       <div class="tt-section">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-          <span class="time-badge">11:50</span>
+          ${badge('t_tt')}
           <span class="tt-header">Table Topics</span>
           <span style="flex:1;text-align:right;font-size:11.5px;color:#0a3a6b">Table Topics Master ${ttm?`<span style="font-weight:700">${ttm}</span>`:dots(4)}</span>
         </div>
@@ -293,7 +319,7 @@ function render(){
 
       <div class="eval-section">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-          <span class="time-badge">12:00</span>
+          ${badge('t_eval')}
           <span class="eval-header">EVALUATIONS</span>
           <span style="flex:1;text-align:right;font-size:11.5px;color:#5a4500">General Evaluator ${ge?`<span style="font-weight:700">${ge}</span>`:dots(4)}</span>
         </div>
@@ -304,7 +330,7 @@ function render(){
 
       <div class="section">
         <div class="section-row">
-          <span class="time-badge">12:22</span>
+          ${badge('t_conc')}
           <div style="flex:1">
             <div class="role-line">
               <span class="section-label">CONCLUSION</span>
@@ -317,7 +343,7 @@ function render(){
 
       <div class="section">
         <div class="section-row">
-          <span class="time-badge">12:25</span>
+          ${badge('t_wrap')}
           <div style="flex:1">
             <div class="role-line">
               <span class="section-label">WRAP UP</span>
@@ -329,7 +355,7 @@ function render(){
       </div>
 
       <div class="section-row" style="border-bottom:none;padding-top:4px">
-        <span class="time-badge">12:30</span>
+        ${badge('t_adj')}
         <span style="font-weight:700;font-size:12.5px;color:#111;padding-left:6px">Adjourn Meeting</span>
       </div>
 
